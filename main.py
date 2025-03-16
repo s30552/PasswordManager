@@ -31,6 +31,23 @@ def generate_password():
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 from tkinter import messagebox
 
+def find_password():
+    try:
+        with open('data.json', 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showerror("Error", "No data found.")
+    else:
+        if website_input.get() in data:
+                email = data[website_input.get()]['email']
+                password = data[website_input.get()]['password']
+                email_input.delete(0, END)
+                email_input.insert(0, email)
+                password_input.insert(0, password)
+        else:
+            messagebox.showerror("Error", "This website has not saved data")
+
+
 
 def save():
     website = website_input.get()
@@ -103,9 +120,9 @@ password_text = Label(text="Password:")
 password_text.grid(row=3, column=0)
 
 # Entries
-website_input = Entry(width=35)
+website_input = Entry(width=21)
 website_input.focus()
-website_input.grid(row=1, column=1, columnspan=2, sticky="EW")
+website_input.grid(row=1, column=1, columnspan=1, sticky="EW")
 email_input = Entry(width=35)
 email_input.insert(0, START_EMAIL)
 email_input.grid(row=2, column=1, columnspan=2, sticky="EW")
@@ -114,9 +131,12 @@ password_input.grid(row=3, column=1, sticky="EW")
 
 # Buttons
 generate_button = Button(text="Generate Password", command=generate_password)
-generate_button.grid(row=3, column=2, sticky="EW")
+generate_button.grid(row=3, column=2, sticky="EW",padx=(5, 0))
 
 add_button = Button(text="Add", width=36, command=save)
 add_button.grid(row=4, column=1, columnspan=2, sticky="EW")
+
+search_button = Button(text="Search", width=15,command=find_password)
+search_button.grid(row=1, column=2,sticky="EW",padx=(5, 0))
 
 window.mainloop()
